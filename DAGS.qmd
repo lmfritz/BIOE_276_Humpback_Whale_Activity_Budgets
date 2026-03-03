@@ -1,0 +1,43 @@
+---
+title: "DAGs"
+author: "Tyler Beaman"
+format: pdf
+editor: visual
+---
+
+## Simple Dag
+
+```{r}
+#loading neccesary packages
+#install.packages("ggdag")
+library(ggdag)
+library(dagitty)
+library(ggplot2)
+```
+
+```{r}
+#this is the DAG that represents the data we will use for answering the question
+#code is from daggity
+
+Simple_Dag <- dagitty('
+dag {
+  bb="0,0,1,1"
+  "No Calf" [pos="0.484,0.041"]
+  Behavior [outcome,pos="0.339,0.195"]
+  Calf [pos="0.208,0.048"]
+  "No Calf" -> Behavior
+  Calf -> Behavior
+}
+')
+
+
+plot(Simple_Dag)
+
+```
+
+```{r}
+#this is the code for the more complex dag
+
+Complex_Dag <- dagitty('
+                       ')
+```
