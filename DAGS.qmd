@@ -35,6 +35,7 @@ plot(Simple_Dag)
 
 ```
 
+## Complex Dag
 ```{r}
 #this is the code for the more complex dag
 
