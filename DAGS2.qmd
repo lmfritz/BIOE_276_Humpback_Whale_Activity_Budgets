@@ -14,7 +14,7 @@ bb="0,0,1,1"
 "Presence of Other Whales" [latent,pos="0.190,0.412"]
 Age [latent,pos="0.433,0.139"]
 Behavior [pos="0.438,0.341"]
-Gender [latent,pos="0.667,0.263"]
+Sex [latent,pos="0.667,0.263"]
 Predators [latent,pos="0.297,0.586"]
 "Calf Presense" -> "Presence of Other Whales"
 "Calf Presense" -> Behavior
@@ -32,8 +32,8 @@ Predators [latent,pos="0.297,0.586"]
 "Presence of Other Whales" -> Predators
 Age -> "Calf Presense"
 Age -> Behavior
-Gender -> "Calf Presense"
-Gender -> Behavior
+Sex -> "Calf Presense"
+Sex -> Behavior
 Predators -> Behavior
 }')
 
