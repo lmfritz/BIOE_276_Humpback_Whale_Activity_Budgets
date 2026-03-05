@@ -1,0 +1,26 @@
+---
+title: "Model"
+format: html
+---
+```{r}
+#getting rid of the data we will not be using in the model
+#loading in the neccesary package
+library(dplyr)
+
+```
+
+
+```{r}
+library(brms)
+read.csv("Whale_Data_Filtered.csv")
+
+fit <- brm(
+  cbind(resting, traveling, foraging, exploring) ~ group,
+  data = Whale_Data_Filtered,
+  family = multinomial(),
+  chains = 4,
+  cores = 4,
+  iter = 4000
+)
+```
+
