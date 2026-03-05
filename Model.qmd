@@ -21,7 +21,7 @@ library(brms)
 read.csv("Whale_Data_Filtered.csv")
 
 fit <- brm(
-  cbind(resting, traveling, foraging, exploring) ~ group,
+  cbind(Resting, Traveling, Foraging, Exploring) ~ group,
   data = Whale_Data_Filtered,
   family = multinomial(),
   chains = 4,
