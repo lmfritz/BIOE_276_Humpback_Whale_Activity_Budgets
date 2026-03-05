@@ -11,11 +11,12 @@ bb="0,0,1,1"
 "Food Source Population" [latent,pos="0.746,0.596"]
 "Human Presence" [latent,pos="0.474,0.562"]
 "Ice Coverage" [latent,pos="0.742,0.435"]
+"Month of year" [latent,pos="0.830,0.520"]
 "Presence of Other Whales" [latent,pos="0.190,0.412"]
 Age [latent,pos="0.433,0.139"]
 Behavior [pos="0.438,0.341"]
-Sex [latent,pos="0.667,0.263"]
 Predators [latent,pos="0.297,0.586"]
+Sex [latent,pos="0.667,0.263"]
 "Calf Presense" -> "Presence of Other Whales"
 "Calf Presense" -> Behavior
 "Calf Presense" -> Predators
@@ -25,16 +26,19 @@ Predators [latent,pos="0.297,0.586"]
 "Human Presence" -> Behavior
 "Human Presence" <-> Predators
 "Ice Coverage" -> "Food Availability"
+"Ice Coverage" -> "Food Source Population"
 "Ice Coverage" -> Behavior
+"Month of year" -> "Food Source Population"
+"Month of year" -> "Ice Coverage"
 "Presence of Other Whales" -> "Food Availability"
 "Presence of Other Whales" -> "Human Presence"
 "Presence of Other Whales" -> Behavior
 "Presence of Other Whales" -> Predators
 Age -> "Calf Presense"
 Age -> Behavior
+Predators -> Behavior
 Sex -> "Calf Presense"
 Sex -> Behavior
-Predators -> Behavior
 }')
 
 plot(Whale_Dag)
