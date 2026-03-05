@@ -1,0 +1,14 @@
+---
+title: "Data Wrangling for Final Project"
+format: html
+editor: visual
+---
+
+## Data Wrangling
+
+```{r}
+#getting rid of the data we will not be using in the model
+#loading in the neccesary package
+library(dplyr)
+
+```
