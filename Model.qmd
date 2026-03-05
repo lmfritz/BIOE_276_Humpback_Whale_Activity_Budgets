@@ -4,11 +4,17 @@ format: html
 ---
 ```{r}
 #getting rid of the data we will not be using in the model
-#loading in the neccesary package
+#loading in the necessary package
 library(dplyr)
 
 ```
 
+```{r}
+# Load in start stuff
+library(brms) # for statistics
+library(tidyverse)
+library(ggeffects) # for the prediction plot
+```
 
 ```{r}
 library(brms)
