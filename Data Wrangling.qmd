@@ -3,6 +3,7 @@ title: "Data Wrangling for Final Project"
 format: html
 editor: visual
 ---
+
 ## Data Wrangling And Exploration
 
 ```{r}
@@ -69,4 +70,13 @@ Whale_Data_Filtered %>%
     mean_foraging = mean(Foraging...., na.rm = TRUE),
     mean_exploring = mean(Exploring...., na.rm = TRUE)
   )
+```
+
+After looking at these two tables, the mean percentage breakdown is more representative of our data because of how much variability there s in Tag on Duration.
+
+```{r}
+# Plotting travel time by month
+Whale_Data_Filtered %>% 
+ggplot(aes(x = Whale_Data_Filtered$Month, y = Traveling....)) +
+  geom_point()
 ```
