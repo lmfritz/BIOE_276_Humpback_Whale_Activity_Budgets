@@ -4,6 +4,7 @@ format: html
 ---
 
 ```{r}
+# DAG to represent relationships between whale behavior and affecting factors
 Whale_Dag <- dag ('{
 bb="0,0,1,1"
 "Calf Presense" [pos="0.261,0.172"]
