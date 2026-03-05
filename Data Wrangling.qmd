@@ -3,12 +3,70 @@ title: "Data Wrangling for Final Project"
 format: html
 editor: visual
 ---
-
-## Data Wrangling
+## Data Wrangling And Exploration
 
 ```{r}
 #getting rid of the data we will not be using in the model
 #loading in the neccesary package
 library(dplyr)
+library(readr)
 
+Whale_Data_Unfiltered <- read.csv("EEB 276 Final Project(Sheet1).csv")
+```
+
+```{r}
+#Filtering data to get rid of rows that we're not using-ones with the lack of certain behavioral data
+Whale_Data_Filtered <- Whale_Data_Unfiltered |> 
+  filter(is.na(Notes) | Notes == "")
+```
+
+```{r}
+#exporting data to make it mroe accesible within github
+write.csv(Whale_Data_Filtered, "Whale_Data_Filtered.csv", row.names = FALSE)
+```
+
+## Data Exploration
+
+```{r}
+#Data exploration to see how many of each category we have
+table(Whale_Data_Filtered$Group)
+```
+
+After filtering the data, we noticed that we only have complete data for 34 individuals and 4 mom and calf pairs. Although these are both smaller numbers than we wanted, it is difficult and expensive to put these tags out. We will discuss this more in our conclusion and next steps.
+
+```{r}
+#getting an understanding of how long on average the tag was on
+Whale_Data_Filtered %>%
+  group_by(Group) %>%
+  summarise(
+    n = n(),
+    mean_tag_time = mean(Tag.on.Duration..hrs., na.rm = TRUE),
+    sd_tag_time = sd(Tag.on.Duration..hrs., na.rm = TRUE)
+  )
+```
+
+Relatively similar times of the tags being on the whales between the two groups, mom_calf is lower because there is one pair that had a tag on for less than an hour. We still decided to include it because we have so few mom_calf pairs and the statistical analysis we are using weights everything equally so this will not negatively affect our outcomes.
+
+```{r}
+#helping to visualize the data and get an understanding using hrs
+Whale_Data_Filtered %>%
+  group_by(Group) %>%
+  summarise(
+    mean_resting = mean(Resting..hrs., na.rm = TRUE),
+    mean_traveling = mean(Traveling..hrs., na.rm = TRUE),
+    mean_foraging = mean(Foraging..hrs., na.rm = TRUE),
+    mean_exploring = mean(Exploring..hrs., na.rm = TRUE)
+  )
+```
+
+```{r}
+#helping to visualize the data and get an understanding using percentage
+Whale_Data_Filtered %>%
+  group_by(Group) %>%
+  summarise(
+    mean_resting = mean(Resting...., na.rm = TRUE),
+    mean_traveling = mean(Traveling...., na.rm = TRUE),
+    mean_foraging = mean(Foraging...., na.rm = TRUE),
+    mean_exploring = mean(Exploring...., na.rm = TRUE)
+  )
 ```
