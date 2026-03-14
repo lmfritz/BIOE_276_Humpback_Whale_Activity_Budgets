@@ -18,12 +18,12 @@ library(ggeffects) # for the prediction plot
 
 ```{r}
 library(brms)
-read.csv("Whale_Data_Filtered.csv")
+Whale_Data_Filtered <-read.csv("Whale_Data_Filtered.csv")
 
 fit <- brm(
-  cbind(Resting, Traveling, Foraging, Exploring) ~ group,
+  cbind(Resting...., Traveling...., Foraging...., Exploring....) ~ Group,
   data = Whale_Data_Filtered,
-  family = multinomial(),
+  family = dirichlet(),
   chains = 4,
   cores = 4,
   iter = 4000
