@@ -1,10 +1,4 @@
----
-title: "README"
-format: html
-editor: visual
-target audience: Academic Community of Polar Marine Ecologists and Biologists 
----
-
+# BIOE 176/276 Final Project
 ## Distinguishing Behavioral State Allocations for Whales with Calves on the Antarctic Foraging Ground
 
 ### Motivating Question
