@@ -25,6 +25,24 @@ Files include:
 ## Target Audience
 Academic Community of Polar Marine Ecologists and Biologist
 
+## Dataset Metadata
+
+Dataset: Whale_Data_Filtered.csv
+
+Source:
+Biotelemetry and Behavioral Ecology Lab (BTBEL)
+
+Variables:
+Group – demographic group (e.g., calf present or not)
+Resting_min – minutes spent resting
+Traveling_min – minutes spent traveling
+Foraging_min – minutes spent foraging
+Exploring_min – minutes spent exploring
+total_min – total behavioral observation time
+
+Units:
+Behavioral states are measured in minutes of observation time.
+
 ### Background
 
 **Scientific Motivation:**
