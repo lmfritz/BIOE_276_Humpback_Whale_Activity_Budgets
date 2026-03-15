@@ -9,6 +9,19 @@ We want to understand if whales with calves, which are presumed to be female and
 
 There has been extensive study of the foraging behavior of Antarctic humpback whales along the Western Antarctic Peninsula but little work done in the region on how this behavior varies amongst different whale demographics. We had the unique opportunity to tap into a decade-long dataset of CATS (Customized Animal Tracking Solutions) tag data gathered by the Biotelemetry and Behavioral Ecology Lab and collaborators. We are excited to be one of the first groups to look at the unique behavior of mothers and calves.
 
+## Repository Structure
+
+This repository contains the full workflow for analyzing humpback whale behavioral state allocations.
+
+Files include:
+
+- Motivation_for_Study.qmd – background and motivating question
+- Data Wrangling.qmd – data cleaning and preparation
+- Model.qmd – statistical analysis using brms
+- DAGS2.qmd – causal diagram used to guide modeling decisions
+- Whale_Data_Filtered.csv – cleaned dataset used for modeling
+- EEB 276 Final Project.csv – original dataset
+
 ## Target Audience
 Academic Community of Polar Marine Ecologists and Biologist
 
