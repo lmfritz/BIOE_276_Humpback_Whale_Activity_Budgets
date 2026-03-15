@@ -43,6 +43,14 @@ Variables:
 Units:
 Behavioral states are measured in minutes of observation time.
 
+## Hypotheses
+
+H1: Whales with calves allocate more time to resting behavior compared to whales without calves.
+
+H2: Whales with calves allocate less time to active behaviors such as traveling or exploring.
+
+H3: Behavioral time allocation varies across the Antarctic foraging season.
+
 ### Background
 
 **Scientific Motivation:**
