@@ -1,0 +1,122 @@
+---
+title: "Exploratory_Analysis"
+format: html
+editor: visual
+---
+
+## Load Libraries
+
+```{r}
+library(tidyverse)
+library(brms)
+```
+
+## Load Data set
+
+```{r}
+whale_data <- read.csv("Whale_Data_Filtered.csv")
+```
+
+## Data Wrangling
+
+```{r}
+#convert hours to min
+whale_data$Resting_min <- whale_data$Resting..hrs. * 60
+whale_data$Traveling_min <- whale_data$Traveling..hrs. * 60
+whale_data$Foraging_min <- whale_data$Foraging..hrs. * 60
+whale_data$Exploring_min <- whale_data$Exploring..hrs. * 60
+
+#calculate total minutes
+whale_data$total_min <- rowSums(
+  whale_data[, c("Resting_min",
+                 "Traveling_min",
+                 "Foraging_min",
+                 "Exploring_min")]
+)
+
+#checking the data makes sense
+summary(whale_data[, c("Resting_min",
+                       "Traveling_min",
+                       "Foraging_min",
+                       "Exploring_min",
+                       "total_min")])
+```
+
+## Create Proportion Variables For Beta Regression
+
+```{r}
+whale_data$Resting_prop <- whale_data$Resting_min / whale_data$total_min
+whale_data$Traveling_prop <- whale_data$Traveling_min / whale_data$total_min
+whale_data$Foraging_prop <- whale_data$Foraging_min / whale_data$total_min
+whale_data$Exploring_prop <- whale_data$Exploring_min / whale_data$total_min
+
+#check
+summary(whale_data$Resting_prop)
+```
+
+## Exploratory Plot
+
+```{r}
+library(ggplot2)
+
+ggplot(whale_data, aes(x = Group, y = Resting_prop)) +
+  geom_boxplot() +
+  labs(
+    title = "Proportion of Time Spent Resting by Whale Group",
+    x = "Whale Group",
+    y = "Proportion of Time Resting"
+  )
+
+ggplot(whale_data, aes(x = Group, y = Traveling_prop)) +
+  geom_boxplot() +
+  labs(
+    title = "Proportion of Time Spent Traveling by Whale Group",
+    x = "Whale Group",
+    y = "Proportion of Time Traveling"
+  )
+
+ggplot(whale_data, aes(x = Group, y = Foraging_prop)) +
+  geom_boxplot() +
+  labs(
+    title = "Proportion of Time Spent Foraging by Whale Group",
+    x = "Whale Group",
+    y = "Proportion of Time Foraging"
+  )
+
+ggplot(whale_data, aes(x = Group, y = Exploring_prop)) +
+  geom_boxplot() +
+  labs(
+    title = "Proportion of Time Spent Exploring by Whale Group",
+    x = "Whale Group",
+    y = "Proportion of Time Exploring"
+  )
+```
+
+# Multinomial Model Prep
+
+```{r}
+# load in package
+library(brms)
+
+#round the minutes columns to be able to run model
+whale_data$Resting_min <- as.integer(round(whale_data$Resting_min))
+whale_data$Traveling_min <- as.integer(round(whale_data$Traveling_min))
+whale_data$Foraging_min <- as.integer(round(whale_data$Foraging_min))
+whale_data$Exploring_min <- as.integer(round(whale_data$Exploring_min))
+
+#recalculate total_min
+whale_data$total_min <- rowSums(
+  whale_data[, c("Resting_min",
+                 "Traveling_min",
+                 "Foraging_min",
+                 "Exploring_min")]
+)
+whale_data$total_min <- as.integer(whale_data$total_min)
+
+#check data types
+str(whale_data[, c("Resting_min",
+                   "Traveling_min",
+                   "Foraging_min",
+                   "Exploring_min",
+                   "total_min")])
+```
