@@ -1,0 +1,214 @@
+---
+title: "Explanatory Doc"
+format: html
+editor: visual
+---
+
+## Load Packages
+
+```{r}
+library(tidyverse)
+library(brms)
+```
+
+## Load Processed Data
+
+```{r}
+whale_data <- read.csv("whale_data_cleaned.csv")
+```
+
+# Behavioral State Allocation by Group
+
+To investigate whether whales with calves allocate time differently among behavioral states compared to whales without calves, we used a multinomial regression model. This model evaluates how time spent in each behavioral state varies as a function of group.
+
+## Multinomial Model
+
+```{r}
+model_multinom <- brm(
+  cbind(Resting_min,
+        Traveling_min,
+        Foraging_min,
+        Exploring_min) | trials(total_min) ~ Group,
+  data = whale_data,
+  family = multinomial(),
+  chains = 4,
+  cores = 4
+)
+```
+
+### Model Summary
+
+```{r}
+#summary of model
+summary(model_multinom)
+
+#posterior and chains check
+plot(model_multinom)
+```
+
+Rhats are 1, posteriors have a normal distribution and chains overlap, meaning the model ran correctly.
+
+### Model Effects
+
+```{r}
+#predictions
+ce <- conditional_effects(model_multinom, effects = "Group", categorical = TRUE)
+df <- ce$Group
+
+#plot
+library(ggplot2)
+
+ggplot(ce$Group, aes(x = Group, y = estimate__, fill = cats__)) +
+  geom_col(position = "dodge") +
+  labs(
+    x = "Group Type",
+    y = "Predicted Probability",
+    fill = "Behavior"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#alternative plot
+ggplot(ce$Group, aes(x = cats__, y = estimate__, fill = Group)) +
+  geom_col(position = "dodge") +
+  labs(
+    x = "Behavior",
+    y = "Predicted Probability",
+    fill = "Group"
+  ) +
+  theme_minimal()
+```
+
+## Beta Regression Models
+
+To further investigate differences in activity budgets, we modeled the **proportion of time spent in each behavioral state** using beta regression models.
+
+### Resting Behavior
+
+```{r}
+model_beta_resting <- brm(
+  Resting_prop ~ Group,
+  data = whale_data,
+  family = Beta()
+)
+
+summary(model_beta_resting)
+```
+
+### Traveling Behavior
+
+```{r}
+model_beta_traveling <- brm(
+  Traveling_prop ~ Group,
+  data = whale_data,
+  family = Beta()
+)
+
+summary(model_beta_traveling)
+```
+
+### Foraging Behavior
+
+```{r}
+# Define a small epsilon to avoid 0s and 1s
+epsilon <- 0.001  
+
+# Transform the proportion for beta regression
+whale_data$Foraging_prop_squeezed <- (whale_data$Foraging_prop * (1 - 2*epsilon)) + epsilon
+
+# Fit the beta regression model
+model_beta_foraging <- brm(
+  Foraging_prop_squeezed ~ Group,
+  data = whale_data,
+  family = Beta()
+)
+
+# Summarize the model
+summary(model_beta_foraging)
+```
+
+### Exploring Behavior
+
+```{r}
+model_beta_exploring <- brm(
+  Exploring_prop ~ Group,
+  data = whale_data,
+  family = Beta()
+)
+
+summary(model_beta_exploring)
+```
+
+### Visualization of Behavioral Proportions
+
+```{r}
+library(tidyr)
+library(ggplot2)
+
+whale_data_long <- whale_data %>%
+  pivot_longer(
+    cols = c(Resting_prop, Traveling_prop, Foraging_prop, Exploring_prop),
+    names_to = "Behavior",
+    values_to = "Proportion"
+  )
+
+ggplot(whale_data_long, aes(x = Behavior, y = Proportion, fill = Group)) +
+  geom_boxplot() +
+  labs(
+    title = "Proportion of Time Spent on Each Behavior by Whale Group",
+    x = "Behavior",
+    y = "Proportion"
+  ) +
+  theme_minimal()
+```
+
+# Interpretation
+
+## Multinomial Model Interpretation
+
+This model evaluated how the distribution of time across behaviors changes depending on whether whales are alone or with a calf.
+
+The reference category is Resting, so the following coefficients represent the log-odds of each behavior relative to resting.
+
+| Behavior  | Effect of Mom + Calf | 95% CI         | Interpretation  |
+|-----------|----------------------|----------------|-----------------|
+| Traveling | **-0.86**            | -1.03 to -0.68 | Strong decrease |
+| Foraging  | **-0.17**            | -0.31 to -0.03 | Slight decrease |
+| Exploring | **-0.14**            | -0.26 to -0.02 | Slight decrease |
+
+The results suggest that whales accompanied by calves tend to allocate relatively less time to active behaviors compared to resting. The strongest effect was observed for traveling, where the estimated effect of the mom-calf group was −0.86 (95% CI: −1.03 to −0.68). Because the credible interval does not include zero, this indicates a statistically meaningful decrease in traveling relative to resting for mom-calf pairs. Smaller negative effects were observed for foraging (estimate = −0.17, 95% CI: −0.31 to −0.03) and exploring (estimate = −0.14, 95% CI: −0.26 to −0.02), and these credible intervals also do not overlap zero, indicating statistically supported decreases in these behaviors relative to resting for whales with calves.
+
+Overall, the multinomial model indicates that whales with calves spend relatively more time resting and less time engaged in active behaviors, particularly traveling, compared to whales without calves.
+
+## Beta Regression Models Interpretation
+
+Beta regression models were then used to examine whether the proportion of time spent in each individual behavioral state differed between groups.
+
+### Resting
+
+For resting behavior, the estimated effect of the mom-calf group was approximately zero (estimate ≈ 0.00, 95% CI: −0.75 to 0.63). Because the credible interval overlaps zero, this result is not statistically significant, indicating no clear evidence that resting proportions differ between groups.
+
+### Traveling
+
+For traveling behavior, the estimated group effect was −0.02 (95% CI: −1.00 to 0.78). The credible interval overlaps zero, meaning the effect is not statistically significant, and there is no clear evidence that traveling proportions differ between whales with calves and those without calves.
+
+### Foraging
+
+For foraging behavior, the estimate was −0.76 (95% CI: −1.98 to 0.30). Although the estimate suggests that mom-calf groups may spend less time foraging, the credible interval overlaps zero, so this result is not statistically significant.
+
+### Exploring
+
+For exploring behavior, the estimated effect was 0.30 (95% CI: −0.27 to 0.91). Because the credible interval overlaps zero, this result is also not statistically significant, indicating no clear evidence of a difference in exploring behavior between groups.
+
+## Overall Interpretation
+
+The multinomial model suggests that whales with calves allocate relatively less time to active behaviors, particularly traveling, compared to resting. However, the beta regression models analyzing each behavior separately show that the credible intervals for group effects overlap with zero in all cases, meaning the differences are not statistically significant. This discrepancy likely reflects the small sample size and the fact that the multinomial model evaluates relative allocation across behaviors, while the beta models assess each behavior independently.
+
+## Next Steps
+
+Future work could improve this analysis by increasing the sample size to provide greater statistical power. With only 38 observations, many of the credible intervals in the beta regression models overlapped with zero, making it difficult to detect statistically significant differences between groups.
+
+Additional environmental or contextual variables, such as location, prey availability, or time of day, could also be incorporated into future models to better explain variation in whale behavior. Including these factors may help determine whether behavioral differences are influenced by ecological conditions in addition to group composition.
+
+Finally, future analyses could explore hierarchical or mixed-effects models to account for repeated observations or variation among individuals. This approach could provide a more detailed understanding of how calf presence influences whale behavioral time allocation.
